@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ICT Quiz — Introduction to Computers &amp; Hardware Components</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; }
+  body {
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #0b1220;
+    color: #e6edf7;
+    min-height:100vh;
+    overflow-x:hidden;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 14px; }
+
+  /* ---------- Generic ---------- */
+  .card {
+    background: #131c2e;
+    border: 1px solid #22304a;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  h1 { font-size: 1.45rem; line-height:1.3; }
+  h2 { font-size: 1.15rem; margin-bottom:10px; color:#7dd3fc; }
+  h3 { font-size: 1rem; margin-bottom:8px; color:#a5b4fc; }
+  p, li { line-height: 1.55; font-size: .95rem; }
+  ul { padding-left: 20px; }
+  .muted { color:#94a3b8; font-size:.85rem; }
+  .center { text-align:center; }
+  .hidden { display:none !important; }
+
+  /* ---------- Buttons ---------- */
+  button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 12px 20px;
+    transition: transform .08s ease, filter .15s ease;
+  }
+  button:active { transform: scale(.98); }
+  .btn-primary { background: linear-gradient(135deg,#0ea5e9,#2563eb); color:#fff; }
+  .btn-primary:hover { filter: brightness(1.1); }
+  .btn-ghost { background:#1e293b; color:#cbd5e1; border:1px solid #334155; }
+  .btn-danger { background: linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; }
+  .btn-block { width:100%; }
+
+  /* ---------- Start screen ---------- */
+  #screen-start .hero {
+    background: linear-gradient(135deg,#0ea5e9 0%,#6366f1 55%,#8b5cf6 100%);
+    border-radius: 16px;
+    padding: 24px 20px;
+    margin-bottom: 16px;
+    text-align:center;
+  }
+  #screen-start .hero h1 { color:#fff; margin-bottom:6px; }
+  #screen-start .hero p { color:#e0f2fe; font-size:.9rem; }
+  .info-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(130px,1fr)); gap:10px; margin:14px 0; }
+  .info-box { background:#0f172a; border:1px solid #22304a; border-radius:10px; padding:10px; text-align:center; }
+  .info-box .big { font-size:1.3rem; font-weight:700; color:#38bdf8; }
+  .info-box .lbl { font-size:.75rem; color:#94a3b8; margin-top:2px; }
+  .warn {
+    background: rgba(239,68,68,.10);
+    border: 1px solid rgba(239,68,68,.45);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 12px 0;
+    font-size: .88rem;
+    color:#fecaca;
+  }
+  .warn ul { padding-left:18px; }
+  .warn li { margin-bottom:4px; }
+
+  /* ---------- Quiz header ---------- */
+  #quizTop {
+    position: sticky; top:0; z-index: 50;
+    background: rgba(11,18,32,.96);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid #22304a;
+    padding: 10px 14px;
+  }
+  .topline { display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; }
+  .pill {
+    background:#1e293b; border:1px solid #334155; border-radius:999px;
+    padding:5px 12px; font-size:.8rem; font-weight:600; color:#cbd5e1;
+    white-space:nowrap;
+  }
+  .pill.time { color:#fbbf24; border-color:#78350f; background:rgba(120,53,15,.35); }
+  .pill.qtime { color:#38bdf8; border-color:#0c4a6e; background:rgba(12,74,110,.35); }
+  .pill.att  { color:#4ade80; border-color:#14532d; background:rgba(20,83,45,.35); }
+  .pill.danger { color:#fca5a5; border-color:#7f1d1d; background:rgba(127,29,29,.4); }
+
+  .bar-outer { height:7px; background:#1e293b; border-radius:999px; overflow:hidden; margin-top:9px; }
+  .bar-inner { height:100%; width:0%; background:linear-gradient(90deg,#0ea5e9,#22d3ee); border-radius:999px; transition: width .3s ease; }
+
+  /* ---------- Question ---------- */
+  #qCard { margin-top:16px; }
+  .qnum { font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:#64748b; margin-bottom:8px; }
+  .qtext { font-size:1.06rem; font-weight:600; line-height:1.5; margin-bottom:16px; }
+
+  .opt {
+    display:flex; align-items:flex-start; gap:12px;
+    background:#0f172a;
+    border:1.5px solid #26364f;
+    border-radius:11px;
+    padding:13px 14px;
+    margin-bottom:10px;
+    cursor:pointer;
+    transition: all .15s ease;
+    font-size:.95rem;
+    line-height:1.45;
+    color:#dbe6f5;
+  }
+  .opt:hover { border-color:#3b82f6; background:#12203a; }
+  .opt .key {
+    flex: 0 0 26px; height:26px; width:26px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%; background:#1e293b; border:1px solid #334155;
+    font-size:.78rem; font-weight:700; color:#93c5fd;
+  }
+  .opt.selected { border-color:#22d3ee; background:rgba(34,211,238,.12); }
+  .opt.selected .key { background:#0891b2; border-color:#22d3ee; color:#fff; }
+
+  .quizfooter { display:flex; gap:10px; margin-top:6px; }
+  .quizfooter button { flex:1; }
+
+  /* ---------- Result ---------- */
+  .score-circle {
+    width: 150px; height:150px; border-radius:50%;
+    margin: 6px auto 14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border: 8px solid #1e293b;
+    background:#0f172a;
+  }
+  .score-circle .val { font-size:2.1rem; font-weight:800; }
+  .score-circle .sub { font-size:.78rem; color:#94a3b8; }
+  .stat-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(110px,1fr)); gap:10px; margin:16px 0; }
+  .stat { background:#0f172a; border:1px solid #22304a; border-radius:10px; padding:12px 8px; text-align:center; }
+  .stat .n { font-size:1.35rem; font-weight:800; }
+  .stat .l { font-size:.72rem; color:#94a3b8; margin-top:3px; letter-spacing:.04em; text-transform:uppercase; }
+  .green { color:#4ade80; } .red { color:#f87171; } .amber { color:#fbbf24; } .blue { color:#38bdf8; }
+
+  .review-item { background:#0f172a; border:1px solid #22304a; border-radius:10px; padding:12px; margin-bottom:10px; }
+  .review-item .rq { font-weight:600; margin-bottom:8px; font-size:.92rem; line-height:1.45; }
+  .review-item .ra { font-size:.85rem; margin-top:3px; line-height:1.4; }
+  .tag { display:inline-block; font-size:.68rem; padding:2px 8px; border-radius:999px; font-weight:700; margin-right:6px; vertical-align:middle; }
+  .tag.ok { background:rgba(74,222,128,.16); color:#4ade80; border:1px solid rgba(74,222,128,.4); }
+  .tag.no { background:rgba(248,113,113,.16); color:#f87171; border:1px solid rgba(248,113,113,.4); }
+  .tag.sk { background:rgba(251,191,36,.16); color:#fbbf24; border:1px solid rgba(251,191,36,.4); }
+
+  #reviewBox { max-height: 520px; overflow-y:auto; padding-right:4px; margin-top:10px; }
+  #reviewBox::-webkit-scrollbar { width:8px; }
+  #reviewBox::-webkit-scrollbar-thumb { background:#334155; border-radius:8px; }
+
+  /* ---------- Overlay (termination) ---------- */
+  #killOverlay {
+    position:fixed; inset:0; background:rgba(69,10,10,.97); z-index:9999;
+    display:flex; align-items:center; justify-content:center; padding:20px; text-align:center;
+  }
+  #killOverlay .box { max-width:520px; }
+  #killOverlay h2 { color:#fca5a5; font-size:1.5rem; margin-bottom:12px; }
+  #killOverlay p { color:#fecaca; margin-bottom:16px; }
+
+  @media (max-width: 480px){
+    h1 { font-size:1.2rem; }
+    .qtext { font-size:1rem; }
+    .opt { font-size:.9rem; padding:12px; }
+    .pill { font-size:.72rem; padding:4px 9px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ START SCREEN ============ -->
+<div id="screen-start" class="wrap">
+  <div class="hero">
+    <h1>ICT — Hardware Components &amp; Computer Evolution</h1>
+    <p>Introduction to Information &amp; Communication Technologies · DIT Part-I</p>
+  </div>
+
+  <div class="card">
+    <h2>Quiz Instructions</h2>
+    <div class="info-grid">
+      <div class="info-box"><div class="big">100</div><div class="lbl">MCQs</div></div>
+      <div class="info-box"><div class="big">100 min</div><div class="lbl">Total Time</div></div>
+      <div class="info-box"><div class="big">60 s</div><div class="lbl">Per Question</div></div>
+      <div class="info-box"><div class="big">1</div><div class="lbl">Attempt Only</div></div>
+    </div>
+
+    <ul style="margin-top:6px;">
+      <li>Each question has <b>four options</b>; only one is correct.</li>
+      <li>A <b>60-second timer</b> runs for every question. When it expires, the test moves forward automatically.</li>
+      <li>The <b>total timer is 100 minutes</b>. When it reaches zero, the test is submitted automatically.</li>
+      <li><b>No back option</b> — once you press <i>Next</i>, you cannot return to a previous question.</li>
+      <li>Attempted questions are tracked live in the header bar.</li>
+      <li>Results, score and full review are shown immediately after submission.</li>
+    </ul>
+
+    <div class="warn">
+      <b>⚠ Anti-Cheating Policy — Strictly Enforced</b>
+      <ul>
+        <li>Switching tabs, minimizing the browser, or opening another app will <b>terminate the test instantly</b>.</li>
+        <li>Losing window focus (clicking outside the quiz window) also terminates the test.</li>
+        <li>Exiting full-screen mode terminates the test.</li>
+        <li>Right-click, copy, cut, paste, text selection, F12 and developer-tool shortcuts are disabled.</li>
+        <li>Browser back navigation is blocked.</li>
+      </ul>
+      <p style="margin-top:8px;">Terminated tests are graded only on questions answered up to that point.</p>
+    </div>
+
+    <div id="historyBox" class="muted" style="margin:12px 0;"></div>
+
+    <button id="startBtn" class="btn-primary btn-block" style="font-size:1.08rem; padding:15px;">▶ Start Quiz</button>
+    <p class="muted center" style="margin-top:10px;">Works fully offline · Progress stored locally on this device</p>
+  </div>
+</div>
+
+<!-- ============ QUIZ SCREEN ============ -->
+<div id="screen-quiz" class="hidden">
+  <div id="quizTop">
+    <div class="topline">
+      <span class="pill" id="pillQ">Question 1 / 100</span>
+      <span class="pill att" id="pillAtt">Attempted 0 / 100</span>
+      <span class="pill time" id="pillTime">⏱ 100:00</span>
+      <span class="pill qtime" id="pillQTime">⏳ 60s</span>
+    </div>
+    <div class="bar-outer"><div class="bar-inner" id="progressBar"></div></div>
+  </div>
+
+  <div class="wrap">
+    <div id="qCard" class="card">
+      <div class="qnum" id="qNumLabel">Question 1</div>
+      <div class="qtext" id="qText"></div>
+      <div id="optionsBox"></div>
+      <div class="quizfooter">
+        <button id="nextBtn" class="btn-primary">Next ▶</button>
+      </div>
+      <p class="muted center" style="margin-top:12px;">Do not switch tabs or windows — the test will be terminated.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="screen-result" class="wrap hidden">
+  <div class="card" style="margin-top:10px;">
+    <div id="resultBanner"></div>
+    <h1 class="center" style="margin-bottom:4px;">Test Completed</h1>
+    <p class="center muted" id="resultSub"></p>
+
+    <div class="score-circle" id="scoreCircle">
+      <div class="val" id="scoreVal">0%</div>
+      <div class="sub" id="scoreSub">0 / 100</div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="n green" id="stCorrect">0</div><div class="l">Correct</div></div>
+      <div class="stat"><div class="n red" id="stWrong">0</div><div class="l">Wrong</div></div>
+      <div class="stat"><div class="n amber" id="stSkipped">0</div><div class="l">Unattempted</div></div>
+      <div class="stat"><div class="n blue" id="stAttempted">0</div><div class="l">Attempted</div></div>
+      <div class="stat"><div class="n" id="stTime">0:00</div><div class="l">Time Taken</div></div>
+      <div class="stat"><div class="n" id="stGrade">—</div><div class="l">Grade</div></div>
+    </div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button id="reviewToggle" class="btn-ghost" style="flex:1;">📋 Show Answer Review</button>
+      <button id="restartBtn" class="btn-primary" style="flex:1;">🔄 Retake Quiz</button>
+    </div>
+
+    <div id="reviewBox" class="hidden"></div>
+  </div>
+  <p class="muted center" style="margin:16px 0 30px;">© ICT Course — DIT Part-I · Offline Assessment Module</p>
+</div>
+
+<!-- ============ TERMINATION OVERLAY ============ -->
+<div id="killOverlay" class="hidden">
+  <div class="box">
+    <h2>⛔ Test Terminated</h2>
+    <p id="killReason">A policy violation was detected.</p>
+    <button id="killBtn" class="btn-danger" style="padding:12px 30px;">View My Result</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ============================================================
+     QUESTION BANK — 100 MCQs (strictly from the supplied notes)
+     ============================================================ */
+  const QUESTIONS = [
+  { q:"Which hardware category is responsible for entering raw data and instructions into a computer?",
+    o:["Storage Devices","Communication Devices","Input Devices","Output Devices"], a:2 },
+
+  { q:"The physical, tangible parts of a computer system that can be seen and touched are collectively known as:",
+    o:["Hardware","Software","Firmware","Shareware"], a:0 },
+
+  { q:"Which of the following is NOT one of the five broad categories of computer hardware?",
+    o:["Input Devices","System Unit","Communication Devices","Operating System"], a:3 },
+
+  { q:"The System Unit houses which of the following?",
+    o:["Keyboard and mouse","CPU, motherboard, and memory","Printer and plotter","Router and modem"], a:1 },
+
+  { q:"Which device converts printed documents or images into digital form?",
+    o:["Plotter","Projector","Scanner","Speaker"], a:2 },
+
+  { q:"A barcode reader is classified as which type of device?",
+    o:["Audio input","Visual output","Communication device","Optical data capture input"], a:3 },
+
+  { q:"Which input device allows direct interaction with the display using fingers or a stylus?",
+    o:["Touchscreen","Joystick","Webcam","Microphone"], a:0 },
+
+  { q:"The GIGO principle is most closely associated with which characteristic of a computer?",
+    o:["Speed","Accuracy","Diligence","Storage"], a:1 },
+
+  { q:"Which of the following is an audio input device?",
+    o:["Speaker","Headphone","Microphone","Monitor"], a:2 },
+
+  { q:"A joystick is primarily used for:",
+    o:["Scanning documents","Printing large drawings","Connecting to networks","Gaming and controlling simulations or machinery"], a:3 },
+
+  { q:"Which output device produces a physical, paper copy of digital documents?",
+    o:["Printer","Monitor","Speaker","Projector"], a:0 },
+
+  { q:"A monitor is classified as which type of output?",
+    o:["Hard copy","Soft copy","Audio output","Large format output"], a:1 },
+
+  { q:"Which output device is used to print high-quality large-scale drawings such as architectural plans?",
+    o:["Laser printer","Projector","Plotter","Scanner"], a:2 },
+
+  { q:"Headphones deliver which type of output?",
+    o:["Visual (soft copy)","Visual (hard copy)","Large display","Audio (personal)"], a:3 },
+
+  { q:"The 'brain' of the computer that fetches, decodes, and executes instructions is the:",
+    o:["CPU","Motherboard","RAM","Power Supply Unit"], a:0 },
+
+  { q:"Which component is the main circuit board that connects all internal components together?",
+    o:["CPU","Motherboard","ROM","Cooling fan"], a:1 },
+
+  { q:"Which type of memory is temporary and volatile, holding data and instructions currently in use?",
+    o:["ROM","Hard Disk","RAM","SSD"], a:2 },
+
+  { q:"ROM is best described as:",
+    o:["Volatile memory holding data currently in use","A type of secondary storage","A communication device","Permanent, non-volatile memory storing essential startup instructions"], a:3 },
+
+  { q:"The Power Supply Unit (PSU) performs which function?",
+    o:["Converts electrical power from the outlet into usable power for internal parts","Cools the CPU","Stores data permanently","Connects the computer to the Internet"], a:0 },
+
+  { q:"Which component dissipates heat generated by the CPU and other components?",
+    o:["Expansion slot","Cooling fan / heat sink","Motherboard","Power Supply Unit"], a:1 },
+
+  { q:"Expansion slots and cards allow:",
+    o:["The CPU to cool down","Data to be stored permanently","Additional components such as graphics and sound cards to be added","Connection only to Wi-Fi"], a:2 },
+
+  { q:"Where does the actual 'Process' stage of the IPO cycle take place?",
+    o:["Input devices","Output devices","Storage devices","System Unit"], a:3 },
+
+  { q:"The System Unit is described as the electronic equivalent of which part of Babbage's Analytical Engine?",
+    o:["The mill","The store","The punched cards","The output printer"], a:0 },
+
+  { q:"Primary storage is:",
+    o:["Non-volatile and permanent","Volatile, with data lost when power is off","Slower than secondary storage","Always larger in capacity than secondary storage"], a:1 },
+
+  { q:"Which of the following is an example of primary storage?",
+    o:["Hard Disk","USB Flash Drive","RAM","Optical Disc"], a:2 },
+
+  { q:"Compared to primary storage, secondary storage is:",
+    o:["Faster but smaller in capacity","Volatile and temporary","Always more expensive per GB","Non-volatile and retains data without power"], a:3 },
+
+  { q:"Hard Disk Drive (HDD) uses which storage technology?",
+    o:["Magnetic","Flash-based","Optical","Network-based"], a:0 },
+
+  { q:"Which storage device is described as fast and durable with no moving parts?",
+    o:["HDD","SSD","Optical Disc","Magnetic tape"], a:1 },
+
+  { q:"Cloud storage stores data:",
+    o:["On a USB flash drive","In RAM","On remote servers, accessible via the Internet","On optical discs"], a:2 },
+
+  { q:"Which storage technology stores data using laser-read patterns?",
+    o:["Magnetic","Flash-based","Network-based","Optical"], a:3 },
+
+  { q:"Memory cards (SD cards) are compact storage devices commonly used in:",
+    o:["Cameras, phones, and portable devices","Desktop servers only","Mainframe computers","Routers"], a:0 },
+
+  { q:"Which communication device converts digital data to analog signals (and back) for transmission?",
+    o:["Router","Modem","NIC","Switch"], a:1 },
+
+  { q:"A Network Interface Card (NIC) enables a computer to:",
+    o:["Convert digital signals to analog","Print documents","Connect to a wired local network (Ethernet)","Store data permanently"], a:2 },
+
+  { q:"Which device directs data traffic between networks and connects devices to the Internet?",
+    o:["Modem","Hub","Wi-Fi Adapter","Router"], a:3 },
+
+  { q:"A Bluetooth adapter is used for:",
+    o:["Short-range wireless communication between nearby devices","Long-range satellite communication","Wired networking","Optical data storage"], a:0 },
+
+  { q:"A hub or switch is used to:",
+    o:["Convert analog signals to digital","Connect multiple devices within a local area network (LAN)","Cool the system unit","Store data long-term"], a:1 },
+
+  { q:"In terms of data flow, input devices move data:",
+    o:["Computer → Human","Computer ↔ Network","Human → Computer","Internally only"], a:2 },
+
+  { q:"Which of the following is a peripheral?",
+    o:["CPU","Motherboard","RAM","Keyboard"], a:3 },
+
+  { q:"A port on a system unit is:",
+    o:["A physical connection point used to attach peripherals","A type of software","A storage device","A network protocol"], a:0 },
+
+  { q:"Software that allows the operating system to communicate with a hardware device is called a:",
+    o:["Port","Driver","Bandwidth","Peripheral"], a:1 },
+
+  { q:"Bandwidth refers to:",
+    o:["The physical size of a cable","The storage capacity of a hard disk","The maximum rate of data transfer across a communication channel or network","The speed of the CPU"], a:2 },
+
+  { q:"Plug and Play refers to:",
+    o:["A game controller","A type of power supply","A storage technology","A device being automatically recognized and configured when connected"], a:3 },
+
+  { q:"IoT stands for:",
+    o:["Internet of Things","Input of Technology","Integrated Online Transfer","Internal Operating Terminal"], a:0 },
+
+  { q:"Which generation of computers used vacuum tubes as the core technology?",
+    o:["Second","First","Third","Fourth"], a:1 },
+
+  { q:"The period of the first generation of computers is:",
+    o:["1956 – 1963","1964 – 1971","1940 – 1956","1971 – 2010"], a:2 },
+
+  { q:"ENIAC is an example of which generation of computers?",
+    o:["Second","Third","Fourth","First"], a:3 },
+
+  { q:"Approximately how many vacuum tubes did ENIAC use?",
+    o:["Around 18,000","Around 1,800","Around 180,000","Around 3,000"], a:0 },
+
+  { q:"ENIAC weighed about:",
+    o:["3 tons","30 tons","300 tons","13 tons"], a:1 },
+
+  { q:"Which programming language was used by first-generation computers?",
+    o:["Assembly language","COBOL","Machine language (binary code, 0s and 1s)","Python"], a:2 },
+
+  { q:"First-generation computers used which technology for memory?",
+    o:["Silicon chips","Flash memory","Cache memory","Magnetic drums"], a:3 },
+
+  { q:"Second-generation computers used which core technology?",
+    o:["Transistors","Vacuum tubes","Integrated Circuits","Microprocessors"], a:0 },
+
+  { q:"The transistor was invented in 1947 at:",
+    o:["IBM Labs","Bell Labs","Intel","Microsoft"], a:1 },
+
+  { q:"Which of the following is a second-generation computer?",
+    o:["UNIVAC I","IBM System/360","IBM 1401","Apple II"], a:2 },
+
+  { q:"Assembly language and early high-level languages such as COBOL and FORTRAN belong to which generation?",
+    o:["First","Third","Fifth","Second"], a:3 },
+
+  { q:"Second-generation computers operated at speeds measured in:",
+    o:["Microseconds","Milliseconds","Nanoseconds","Picoseconds"], a:0 },
+
+  { q:"Integrated Circuits (ICs) are also called:",
+    o:["Vacuum tubes","Silicon chips","Magnetic drums","Transistors"], a:1 },
+
+  { q:"Which generation introduced Operating Systems?",
+    o:["First","Second","Third","Fourth"], a:2 },
+
+  { q:"IBM System/360 belongs to which generation of computers?",
+    o:["Second","Fourth","Fifth","Third"], a:3 },
+
+  { q:"Multitasking became possible with which generation of computers?",
+    o:["Third","First","Second","None of these"], a:0 },
+
+  { q:"Third-generation computers operated at speeds measured in:",
+    o:["Microseconds","Nanoseconds","Milliseconds","Picoseconds"], a:1 },
+
+  { q:"Keyboards and monitors were introduced in which generation?",
+    o:["First","Second","Third","Fourth"], a:2 },
+
+  { q:"The microprocessor was the core technology of which generation?",
+    o:["Third","Fifth","Second","Fourth"], a:3 },
+
+  { q:"The first commercial microprocessor was the:",
+    o:["Intel 4004","Intel Pentium","AMD Ryzen","Motorola 68000"], a:0 },
+
+  { q:"The Intel 4004 microprocessor was launched in:",
+    o:["1964","1971","1981","1984"], a:1 },
+
+  { q:"Which computer, introduced in 1981, standardized personal computing?",
+    o:["Apple Macintosh","UNIVAC I","IBM Personal Computer (PC)","PDP-8"], a:2 },
+
+  { q:"The Apple Macintosh (1984) popularized:",
+    o:["Vacuum tubes","Machine language","Punched cards","The Graphical User Interface (GUI) and mouse"], a:3 },
+
+  { q:"Fourth-generation computers operated at speeds measured in:",
+    o:["Picoseconds","Microseconds","Nanoseconds","Milliseconds"], a:0 },
+
+  { q:"Which of the following belongs to the fourth generation of computers?",
+    o:["IBM 1401","IBM PC","IBM System/360","ENIAC"], a:1 },
+
+  { q:"The fifth generation of computers is primarily based on:",
+    o:["Transistors","Vacuum tubes","Artificial Intelligence","Integrated Circuits"], a:2 },
+
+  { q:"Which of the following is an example of fifth-generation computing?",
+    o:["UNIVAC I","IBM 1401","PDP-11","Voice assistants such as Siri and Alexa"], a:3 },
+
+  { q:"Which programming language is commonly associated with AI development?",
+    o:["Python","COBOL","FORTRAN","Assembly language"], a:0 },
+
+  { q:"GPU/TPU accelerators used to accelerate AI workloads are associated with which generation?",
+    o:["Second","Fifth","Third","Fourth"], a:1 },
+
+  { q:"First-generation computers suffered from which reliability problem?",
+    o:["They never failed","They were too small","Vacuum tubes burned out frequently","They used too little power"], a:2 },
+
+  { q:"Punched cards and magnetic tape were the input/output media of which generation?",
+    o:["First","Third","Fourth","Second"], a:3 },
+
+  { q:"First-generation computers used which input/output media?",
+    o:["Punched cards and paper tape","Keyboards and monitors","Mouse and GUI","Voice and touch"], a:0 },
+
+  { q:"Which is considered the earliest known calculating device?",
+    o:["Pascaline","Abacus","Analytical Engine","Napier's Bones"], a:1 },
+
+  { q:"The Abacus was used for calculations around:",
+    o:["1617 AD","1642 AD","2400 BC","1890 AD"], a:2 },
+
+  { q:"Napier's Bones, a manual calculating tool using numbered rods, was invented in 1617 by:",
+    o:["Blaise Pascal","Gottfried Leibniz","Charles Babbage","John Napier"], a:3 },
+
+  { q:"The Pascaline, the first mechanical calculator, was built in 1642 by:",
+    o:["Blaise Pascal","Gottfried Leibniz","Herman Hollerith","Joseph Marie Jacquard"], a:0 },
+
+  { q:"Which device improved Pascal's design and could also perform multiplication and division?",
+    o:["Pascaline","Stepped Reckoner","Abacus","Difference Engine"], a:1 },
+
+  { q:"The Stepped Reckoner (1673) was developed by:",
+    o:["John Napier","Blaise Pascal","Gottfried Leibniz","Charles Babbage"], a:2 },
+
+  { q:"Jacquard's Loom (1801) introduced the concept of:",
+    o:["Vacuum tubes","Integrated circuits","Cloud storage","Programmable machines and punched-card input"], a:3 },
+
+  { q:"The Difference Engine (1822), designed to compute and print mathematical tables automatically, was created by:",
+    o:["Charles Babbage","Herman Hollerith","John Napier","Joseph Marie Jacquard"], a:0 },
+
+  { q:"Charles Babbage designed the Analytical Engine in:",
+    o:["1822","1837","1890","1801"], a:1 },
+
+  { q:"Who is regarded as the \"Father of the Computer\"?",
+    o:["Blaise Pascal","John Napier","Charles Babbage","Herman Hollerith"], a:2 },
+
+  { q:"Who is considered the first programmer?",
+    o:["Grace Hopper","Charles Babbage","John Napier","Ada Lovelace"], a:3 },
+
+  { q:"Ada Lovelace wrote the first algorithm for a machine in:",
+    o:["1843","1837","1890","1822"], a:0 },
+
+  { q:"The Tabulating Machine (1890), which used punched cards for the US Census, was developed by:",
+    o:["Charles Babbage","Herman Hollerith","Blaise Pascal","Gottfried Leibniz"], a:1 },
+
+  { q:"Herman Hollerith's company later became part of:",
+    o:["Intel","Apple","IBM","Microsoft"], a:2 },
+
+  { q:"The Tabulating Machine (1890) was used to:",
+    o:["Weave fabric patterns","Compute mathematical tables","Send electronic mail","Tabulate the US Census data"], a:3 },
+
+  { q:"The Analytical Engine consisted of:",
+    o:["Memory, a control unit, and input/output","Only a processor","Only memory","A modem and a router"], a:0 },
+
+  { q:"Which generation's speed is described as \"extremely high (parallel)\"?",
+    o:["Milliseconds only","Extremely high (parallel processing)","Nanoseconds only","Picoseconds only"], a:1 },
+
+  { q:"Moore's Law states that the number of transistors on a microchip:",
+    o:["Halves every two years","Triples every year","Doubles approximately every two years while cost decreases","Remains constant over time"], a:2 },
+
+  { q:"A GUI (Graphical User Interface) allows users to interact using:",
+    o:["Only typed text commands","Punched cards","Binary code","Icons, windows, and a mouse"], a:3 },
+
+  { q:"The World Wide Web was made publicly available in:",
+    o:["1991","1984","2007","1981"], a:0 },
+
+  { q:"ENIAC, the first general-purpose electronic computer, was completed in:",
+    o:["1951","1946","1947","1958"], a:1 },
+
+  { q:"The first Integrated Circuit was developed in:",
+    o:["1947","1971","1958","1964"], a:2 },
+
+  { q:"Which of the following best defines a computer?",
+    o:["A device that only stores data","A machine that only performs calculations","A device used only for internet browsing","An electronic device that accepts data, processes it according to stored instructions, and produces meaningful information"], a:3 },
+
+  { q:"Which characteristic of a computer means it can perform repetitive tasks continuously without fatigue or boredom?",
+    o:["Diligence","Speed","Accuracy","Versatility"], a:0 },
+
+  { q:"Computer processing speed is commonly measured in:",
+    o:["Bytes","MIPS / FLOPs","Pixels","Hertz only"], a:1 }
+  ];
+
+  /* ============================================================
+     CONSTANTS & STATE
+     ============================================================ */
+  const TOTAL_Q      = QUESTIONS.length;      // 100
+  const TOTAL_TIME   = TOTAL_Q * 60;          // 6000 seconds = 100 minutes
+  const PER_Q_TIME   = 60;                    // 60 seconds per question
+  const LETTERS      = ["A","B","C","D"];
+
+  let state = null;
+  let tickId = null;
+  let fullscreenActive = false;
+  let startedAt = 0;
+
+  const $ = id => document.getElementById(id);
+
+  /* ============================================================
+     SCREEN MANAGEMENT
+     ============================================================ */
+  function showScreen(name){
+    $("screen-start").classList.add("hidden");
+    $("screen-quiz").classList.add("hidden");
+    $("screen-result").classList.add("hidden");
+    $("screen-" + name).classList.remove("hidden");
+    window.scrollTo(0,0);
+  }
+
+  /* ============================================================
+     TIMER FORMATTING
+     ============================================================ */
+  function fmt(sec){
+    sec = Math.max(0, sec);
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
+  }
+
+  /* ============================================================
+     START QUIZ
+     ============================================================ */
+  function startQuiz(){
+    state = {
+      current: 0,
+      answers: new Array(TOTAL_Q).fill(null),
+      totalLeft: TOTAL_TIME,
+      qLeft: PER_Q_TIME,
+      running: true,
+      terminated: false,
+      reason: "",
+      startTs: Date.now(),
+      elapsed: 0
+    };
+    startedAt = Date.now();
+    showScreen("quiz");
+    renderQuestion();
+    updateHeader();
+    if (tickId) clearInterval(tickId);
+    tickId = setInterval(tick, 1000);
+    requestFullscreen();
+  }
+
+  /* ============================================================
+     TIMER TICK
+     ============================================================ */
+  function tick(){
+    if (!state || !state.running) return;
+
+    state.totalLeft--;
+    state.qLeft--;
+    state.elapsed++;
+
+    if (state.totalLeft <= 0){
+      $("pillTime").textContent = "⏱ 0:00";
+      finish("Total time expired — the test was submitted automatically.");
+      return;
+    }
+
+    if (state.qLeft <= 0){
+      goNext(true);
+      return;
+    }
+
+    updateTimers();
+  }
+
+  function updateTimers(){
+    if (!state) return;
+    $("pillTime").textContent  = "⏱ " + fmt(state.totalLeft);
+    $("pillQTime").textContent = "⏳ " + state.qLeft + "s";
+    if (state.qLeft <= 10) $("pillQTime").classList.add("danger");
+    else $("pillQTime").classList.remove("danger");
+    if (state.totalLeft <= 60) $("pillTime").classList.add("danger");
+  }
+
+  /* ============================================================
+     RENDER QUESTION
+     ============================================================ */
+  function renderQuestion(){
+    const idx = state.current;
+    const q = QUESTIONS[idx];
+
+    $("qNumLabel").textContent = "Question " + (idx + 1) + " of " + TOTAL_Q;
+    $("qText").textContent = q.q;
+
+    const box = $("optionsBox");
+    box.innerHTML = "";
+
+    q.o.forEach(function(optText, i){
+      const div = document.createElement("div");
+      div.className = "opt";
+      if (state.answers[idx] === i) div.classList.add("selected");
+      div.innerHTML = '<span class="key">' + LETTERS[i] + '</span><span class="txt"></span>';
+      div.querySelector(".txt").textContent = optText;
+      div.addEventListener("click", function(){
+        if (!state.running) return;
+        state.answers[idx] = i;
+        Array.prototype.forEach.call(box.children, function(c){ c.classList.remove("selected"); });
+        div.classList.add("selected");
+        updateHeader();
+      });
+      box.appendChild(div);
+    });
+
+    $("nextBtn").textContent = (idx === TOTAL_Q - 1) ? "✔ Submit Test" : "Next ▶";
+  }
+
+  /* ============================================================
+     HEADER / PROGRESS
+     ============================================================ */
+  function updateHeader(){
+    const attempted = state.answers.filter(function(a){ return a !== null; }).length;
+    $("pillQ").textContent   = "Question " + (state.current + 1) + " / " + TOTAL_Q;
+    $("pillAtt").textContent = "Attempted " + attempted + " / " + TOTAL_Q;
+    $("progressBar").style.width = ((state.current + 1) / TOTAL_Q * 100) + "%";
+    updateTimers();
+  }
+
+  /* ============================================================
+     NEXT / AUTO-ADVANCE
+     ============================================================ */
+  function goNext(auto){
+    if (!state || !state.running) return;
+
+    if (state.current >= TOTAL_Q - 1){
+      finish(auto ? "Time expired on the final question — the test was submitted automatically."
+                  : "Test submitted successfully.");
+      return;
+    }
+
+    state.current++;
+    state.qLeft = PER_Q_TIME;
+    renderQuestion();
+    updateHeader();
+  }
+
+  /* ============================================================
+     FINISH / TERMINATE
+     ============================================================ */
+  function finish(reason){
+    if (!state || !state.running) return;
+    state.running = false;
+    if (tickId){ clearInterval(tickId); tickId = null; }
+
+    if (document.fullscreenElement && document.exitFullscreen){
+      fullscreenActive = false;
+      document.exitFullscreen().catch(function(){});
+    }
+
+    state.reason = reason;
+    state.elapsed = Math.round((Date.now() - state.startTs) / 1000);
+    if (state.elapsed > TOTAL_TIME) state.elapsed = TOTAL_TIME;
+
+    buildResults();
+    saveResultToDB();
+    showScreen("result");
+  }
+
+  function terminate(reason){
+    if (!state || !state.running) return;
+    state.terminated = true;
+    state.running = false;
+    if (tickId){ clearInterval(tickId); tickId = null; }
+
+    $("killReason").textContent = reason;
+    $("killOverlay").classList.remove("hidden");
+
+    if (document.fullscreenElement && document.exitFullscreen){
+      fullscreenActive = false;
+      document.exitFullscreen().catch(function(){});
+    }
+
+    state.elapsed = Math.round((Date.now() - state.startTs) / 1000);
+    if (state.elapsed > TOTAL_TIME) state.elapsed = TOTAL_TIME;
+
+    buildResults();
+    saveResultToDB();
+  }
+
+  $("killBtn").addEventListener("click", function(){
+    $("killOverlay").classList.add("hidden");
+    showScreen("result");
+  });
+
+  /* ============================================================
+     BUILD RESULTS
+     ============================================================ */
+  let lastResult = null;
+
+  function buildResults(){
+    let correct = 0, wrong = 0, skipped = 0, attempted = 0;
+
+    for (let i = 0; i < TOTAL_Q; i++){
+      const a = state.answers[i];
+      if (a === null){ skipped++; }
+      else {
+        attempted++;
+        if (a === QUESTIONS[i].a) correct++;
+        else wrong++;
+      }
+    }
+
+    const pct = Math.round((correct / TOTAL_Q) * 100);
+
+    let grade = "F";
+    if (pct >= 90) grade = "A+";
+    else if (pct >= 80) grade = "A";
+    else if (pct >= 70) grade = "B";
+    else if (pct >= 60) grade = "C";
+    else if (pct >= 50) grade = "D";
+
+    lastResult = {
+      correct: correct, wrong: wrong, skipped: skipped,
+      attempted: attempted, percent: pct, grade: grade,
+      elapsed: state.elapsed, terminated: state.terminated,
+      reason: state.reason, date: new Date().toLocaleString()
+    };
+
+    /* ---- Banner ---- */
+    const banner = $("resultBanner");
+    if (state.terminated){
+      banner.innerHTML = '<div class="warn" style="margin-top:0;"><b>⛔ Test Terminated:</b> ' +
+                         escapeHtml(state.reason) +
+                         '<br><span class="muted">Only questions answered before termination were graded.</span></div>';
+    } else {
+      banner.innerHTML = '<div class="warn" style="background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.45);color:#bbf7d0;margin-top:0;">' +
+                         '<b>✅ ' + escapeHtml(state.reason) + '</b></div>';
+    }
+
+    $("resultSub").textContent = "Attempted on " + lastResult.date;
+
+    $("scoreVal").textContent = pct + "%";
+    $("scoreVal").className = "val " + (pct >= 50 ? "green" : "red");
+    $("scoreSub").textContent = correct + " / " + TOTAL_Q + " correct";
+
+    $("stCorrect").textContent   = correct;
+    $("stWrong").textContent     = wrong;
+    $("stSkipped").textContent   = skipped;
+    $("stAttempted").textContent = attempted;
+    $("stTime").textContent      = fmt(state.elapsed);
+    $("stGrade").textContent     = grade;
+
+    /* ---- Review ---- */
+    const box = $("reviewBox");
+    box.innerHTML = "";
+    for (let i = 0; i < TOTAL_Q; i++){
+      const q = QUESTIONS[i];
+      const a = state.answers[i];
+      let tagClass, tagText, yourAns;
+
+      if (a === null){
+        tagClass = "sk"; tagText = "UNATTEMPTED";
+        yourAns = "—";
+      } else if (a === q.a){
+        tagClass = "ok"; tagText = "CORRECT";
+        yourAns = LETTERS[a] + ". " + q.o[a];
+      } else {
+        tagClass = "no"; tagText = "WRONG";
+        yourAns = LETTERS[a] + ". " + q.o[a];
+      }
+
+      const item = document.createElement("div");
+      item.className = "review-item";
+
+      const head = document.createElement("div");
+      head.className = "rq";
+      head.innerHTML = '<span class="tag ' + tagClass + '">' + tagText + '</span> Q' + (i + 1) + '. ' + escapeHtml(q.q);
+      item.appendChild(head);
+
+      const y = document.createElement("div");
+      y.className = "ra";
+      y.innerHTML = '<span class="muted">Your answer:</span> <span class="' +
+                    (a === q.a ? "green" : (a === null ? "amber" : "red")) + '">' +
+                    escapeHtml(yourAns) + '</span>';
+      item.appendChild(y);
+
+      if (a !== q.a){
+        const c = document.createElement("div");
+        c.className = "ra";
+        c.innerHTML = '<span class="muted">Correct answer:</span> <span class="green">' +
+                      LETTERS[q.a] + '. ' + escapeHtml(q.o[q.a]) + '</span>';
+        item.appendChild(c);
+      }
+
+      box.appendChild(item);
+    }
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(m){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[m];
+    });
+  }
+
+  /* ============================================================
+     INDEXEDDB STORAGE (with localStorage fallback)
+     ============================================================ */
+  const DB_NAME = "ICT_Quiz_DB";
+  const DB_VERSION = 1;
+  const STORE = "results";
+
+  function openDB(){
+    return new Promise(function(resolve, reject){
+      if (!("indexedDB" in window)) { reject(new Error("no-idb")); return; }
+      let req;
+      try { req = indexedDB.open(DB_NAME, DB_VERSION); }
+      catch(e){ reject(e); return; }
+
+      req.onupgradeneeded = function(e){
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(STORE)){
+          db.createObjectStore(STORE, { keyPath: "id", autoIncrement: true });
+        }
+      };
+      req.onsuccess = function(e){ resolve(e.target.result); };
+      req.onerror   = function(e){ reject(e.target.error || new Error("idb-error")); };
+    });
+  }
+
+  function saveResultToDB(){
+    const record = {
+      percent: lastResult.percent,
+      correct: lastResult.correct,
+      wrong: lastResult.wrong,
+      skipped: lastResult.skipped,
+      attempted: lastResult.attempted,
+      grade: lastResult.grade,
+      elapsed: lastResult.elapsed,
+      terminated: lastResult.terminated,
+      date: lastResult.date,
+      ts: Date.now()
+    };
+
+    openDB().then(function(db){
+      const tx = db.transaction(STORE, "readwrite");
+      tx.objectStore(STORE).add(record);
+      tx.oncomplete = function(){ db.close(); };
+      tx.onerror = function(){ db.close(); fallbackSave(record); };
+    }).catch(function(){
+      fallbackSave(record);
+    });
+  }
+
+  function fallbackSave(record){
+    try {
+      const arr = JSON.parse(localStorage.getItem("ict_quiz_results") || "[]");
+      arr.push(record);
+      localStorage.setItem("ict_quiz_results", JSON.stringify(arr.slice(-25)));
+    } catch(e){ /* storage unavailable */ }
+  }
+
+  function loadHistory(){
+    openDB().then(function(db){
+      const tx = db.transaction(STORE, "readonly");
+      const req = tx.objectStore(STORE).getAll();
+      req.onsuccess = function(){
+        renderHistory(req.result || []);
+        db.close();
+      };
+      req.onerror = function(){ db.close(); loadHistoryFallback(); };
+    }).catch(function(){ loadHistoryFallback(); });
+  }
+
+  function loadHistoryFallback(){
+    try {
+      const arr = JSON.parse(localStorage.getItem("ict_quiz_results") || "[]");
+      renderHistory(arr);
+    } catch(e){ renderHistory([]); }
+  }
+
+  function renderHistory(arr){
+    const box = $("historyBox");
+    if (!arr || arr.length === 0){
+      box.innerHTML = "📁 No previous attempts stored on this device.";
+      return;
+    }
+    let best = 0;
+    arr.forEach(function(r){ if (r.percent > best) best = r.percent; });
+    const last = arr[arr.length - 1];
+    box.innerHTML = "📁 Previous attempts: <b>" + arr.length + "</b> &nbsp;|&nbsp; " +
+                    "Best score: <b class='green'>" + best + "%</b> &nbsp;|&nbsp; " +
+                    "Last: <b>" + last.percent + "%</b> (" + escapeHtml(last.grade) + ")" +
+                    (last.terminated ? " <span class='red'>[terminated]</span>" : "");
+  }
+
+  /* ============================================================
+     ANTI-CHEATING
+     ============================================================ */
+  function requestFullscreen(){
+    const el = document.documentElement;
+    const fn = el.requestFullscreen || el.webkitRequestFullscreen ||
+               el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (fn){
+      try {
+        const p = fn.call(el);
+        if (p && p.then){
+          p.then(function(){ fullscreenActive = true; })
+           .catch(function(){ fullscreenActive = false; });
+        } else {
+          fullscreenActive = true;
+        }
+      } catch(e){ fullscreenActive = false; }
+    }
+  }
+
+  document.addEventListener("fullscreenchange", function(){
+    if (!state || !state.running) return;
+    if (!document.fullscreenElement && fullscreenActive){
+      terminate("You exited full-screen mode. Exiting full-screen is treated as a violation of the test policy.");
+    }
+  });
+  document.addEventListener("webkitfullscreenchange", function(){
+    if (!state || !state.running) return;
+    if (!document.webkitFullscreenElement && fullscreenActive){
+      terminate("You exited full-screen mode. Exiting full-screen is treated as a violation of the test policy.");
+    }
+  });
+
+  /* --- Tab / window switching --- */
+  document.addEventListener("visibilitychange", function(){
+    if (!state || !state.running) return;
+    if (document.hidden){
+      terminate("You switched tabs, minimized the browser, or moved the test to the background. This is not permitted during the assessment.");
+    }
+  });
+
+  window.addEventListener("blur", function(){
+    if (!state || !state.running) return;
+    // small grace period to avoid false positives right at start
+    if (Date.now() - startedAt < 1500) return;
+    setTimeout(function(){
+      if (state && state.running && !document.hasFocus()){
+        terminate("The quiz window lost focus (you clicked outside the test window or opened another application). The test has been terminated.");
+      }
+    }, 120);
+  });
+
+  window.addEventListener("beforeunload", function(e){
+    if (state && state.running){
+      e.preventDefault();
+      e.returnValue = "Your test is still in progress. Leaving will terminate it.";
+      return e.returnValue;
+    }
+  });
+
+  /* --- Block back navigation --- */
+  history.pushState({ quiz: true }, "", location.href);
+  window.addEventListener("popstate", function(){
+    history.pushState({ quiz: true }, "", location.href);
+  });
+
+  /* --- Block shortcuts & context menu --- */
+  document.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+  document.addEventListener("copy", function(e){ e.preventDefault(); });
+  document.addEventListener("cut",  function(e){ e.preventDefault(); });
+  document.addEventListener("paste",function(e){ e.preventDefault(); });
+  document.addEventListener("selectstart", function(e){ e.preventDefault(); });
+  document.addEventListener("dragstart", function(e){ e.preventDefault(); });
+
+  document.addEventListener("keydown", function(e){
+    const k = (e.key || "").toLowerCase();
+
+    if (k === "f12"){ e.preventDefault(); return false; }
+
+    if (e.ctrlKey && e.shiftKey && (k === "i" || k === "j" || k === "c")){
+      e.preventDefault(); return false;
+    }
+    if (e.ctrlKey && (k === "u" || k === "s" || k === "p")){
+      e.preventDefault(); return false;
+    }
+    if (e.metaKey && e.altKey && (k === "i" || k === "j" || k === "c")){
+      e.preventDefault(); return false;
+    }
+    if (k === "printscreen"){ e.preventDefault(); return false; }
+
+    // Block Alt+Left / Backspace navigation
+    if (e.altKey && k === "arrowleft"){ e.preventDefault(); return false; }
+    if (k === "backspace" && e.target === document.body){ e.preventDefault(); return false; }
+
+    // Block Ctrl+1..9 tab switching hints (browser-level, best effort)
+    if (e.ctrlKey && /^[1-9]$/.test(k)){ e.preventDefault(); return false; }
+  });
+
+  /* ============================================================
+     EVENT WIRING
+     ============================================================ */
+  $("startBtn").addEventListener("click", startQuiz);
+
+  $("nextBtn").addEventListener("click", function(){ goNext(false); });
+
+  $("reviewToggle").addEventListener("click", function(){
+    const box = $("reviewBox");
+    const hidden = box.classList.contains("hidden");
+    box.classList.toggle("hidden");
+    this.textContent = hidden ? "📋 Hide Answer Review" : "📋 Show Answer Review";
+  });
+
+  $("restartBtn").addEventListener("click", function(){
+    if (tickId){ clearInterval(tickId); tickId = null; }
+    state = null;
+    lastResult = null;
+    $("reviewBox").classList.add("hidden");
+    $("reviewToggle").textContent = "📋 Show Answer Review";
+    $("killOverlay").classList.add("hidden");
+    loadHistory();
+    showScreen("start");
+  });
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  window.addEventListener("load", function(){
+    loadHistory();
+    showScreen("start");
+  });
+
+})();
+</script>
+</body>
+</html>
