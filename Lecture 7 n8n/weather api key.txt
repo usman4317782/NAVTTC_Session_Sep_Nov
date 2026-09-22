@@ -1,1 +1,6 @@
 https://home.openweathermap.org/api_keys
+
+
+https://api.openweathermap.org/data/2.5/weather?q={{ $fromAI("city", "The city name to get weather for") }}&appid=YOUR_KEY&units=metric
+
+
